@@ -13,10 +13,12 @@ public class CalculateRateCommand implements Command{
     private final CurrencyDialog currencyDialog;
     private final SwingMoneyDisplay display;
 
-    public CalculateRateCommand(SwingMoneyDialog moneyDialog, CurrencyDialog currencyDialog, SwingMoneyDisplay display) {
+    private final FixerExchangeRateLoader loader;
+    public CalculateRateCommand(SwingMoneyDialog moneyDialog, CurrencyDialog currencyDialog, SwingMoneyDisplay display, FixerExchangeRateLoader loader) {
         this.moneyDialog = moneyDialog;
         this.currencyDialog = currencyDialog;
         this.display = display;
+        this.loader = loader;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class CalculateRateCommand implements Command{
     }
 
     private Money exchange() {
-        ExchangeRate rate = new FixerExchangeRateLoader().load(currencyDialog.get());
+        ExchangeRate rate = loader.load(currencyDialog.get());
         double amount = rate.rate() * moneyDialog.get().amount();
         return new Money(amount, currencyDialog.get());
     }
